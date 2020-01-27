@@ -17,7 +17,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 you're ready to go.
 
-### Usage
+# Usage
 
 convert onload function
 ```php
