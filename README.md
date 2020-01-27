@@ -19,6 +19,22 @@ you're ready to go.
 
 ### Usage
 
+convert onload function
+```php
+$js = <<<HTML
+$(function(){
+	
+});
+HTML;
+echo \Erbilen\JqueryToJS::convert($js);
+
+/*
+document.addEventListener("DOMContentLoaded", () => {
+	
+});
+*/
+```
+
 convert variables
 
 ```php
