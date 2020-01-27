@@ -3,9 +3,21 @@ This PHP class helps to convert your (really) simple jquery codes to vanilla jav
 
 There is a lot of issues, it's not completed yet, yet you can convert your simple jquery codes to vanilla js instead of use jquery library using this php class.
 
-Here some simple examples;
+Install with composer
 
-### Examples
+```
+composer require tayfunerbilen/jquery-to-javascript-convert dev-master
+```
+
+then include `autoload.php` file in to your php file.
+
+```php
+require __DIR__ . '/vendor/autoload.php';
+```
+
+you're ready to go.
+
+### Usage
 
 convert variables
 
