@@ -242,3 +242,82 @@ let request = new XMLHttpRequest();
     request.send(data);
 */
 ```
+
+# converting little bit complex code
+```php
+$js = <<<JS
+$(function () {
+
+    $('#button').on('click', function (e) {
+        var container = $('#container'),
+            text = $('#text');
+        if (container.hasClass('active')) {
+            container.removeClass('active');
+            text.html('<b>container hidden</b>');
+        } else {
+            container.addClass('actived');
+            text.html('<b>container showed</b>');
+        }
+        e.preventDefault();
+    });
+
+    $('#load-btn').on('click', function (e) {
+
+        $.ajax({
+            type: 'GET',
+            url: 'api/load-more',
+            success: function (result) {
+                console.log(result);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+
+        e.preventDefault();
+    });
+
+});
+JS;
+
+/*
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    document.getElementById("button").addEventListener('click', (e) => {
+        let container = document.getElementById("container"),
+            text = document.getElementById("text");
+        if (container.classList.contains("active")) {
+            container.classList.remove("active");
+            text.innerHTML = '<b>container hidden</b>';
+        } else {
+            container.classList.add("actived");
+            text.innerHTML = '<b>container showed</b>';
+        }
+        e.preventDefault();
+    });
+
+    document.getElementById("load-btn").addEventListener('click', (e) => {
+
+        let request = new XMLHttpRequest();
+        request.open('GET', 'api/load-more', true);
+
+        request.onload = () => {
+            if (this.status >= 200 && this.status < 400) {
+                let result = this.response;
+                console.log(result);
+            }
+        };
+
+        request.onerror = (err) => {
+            console.log(err);
+        };
+
+        request.send();
+
+        e.preventDefault();
+    });
+
+});
+*/
+```
