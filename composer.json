@@ -1,6 +1,7 @@
 {
     "name": "tayfunerbilen/jquery-to-javascript-convert",
     "type": "class",
+    "version": "0.0.1",
     "description": "It helps to convert your simple jquery codes to vanilla javascript codes",
     "keywords": ["php","jquery","javascript","converter"],
     "homepage": "https://github.com/tayfunerbilen/jquery-to-javascript-convert",
