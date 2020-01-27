@@ -5,7 +5,6 @@
     "keywords": ["php","jquery","javascript","converter"],
     "homepage": "https://github.com/tayfunerbilen/jquery-to-javascript-convert",
     "license": "MIT",
-    "version": "0.0.1",
     "authors": [
         {
             "name": "Tayfun Erbilen",
@@ -17,5 +16,10 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Erbilen\\": "src"
+        }
     }
 }
