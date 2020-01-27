@@ -21,11 +21,11 @@ you're ready to go.
 
 convert onload function
 ```php
-$js = <<<HTML
+$js = <<<JS
 $(function(){
 	
 });
-HTML;
+JS;
 echo \Erbilen\JqueryToJS::convert($js);
 
 /*
@@ -155,11 +155,11 @@ echo Erbilen\JqueryToJS::convert("$('#container').toggleClass('active')");
 convert `on()` method
 
 ```php
-$js = <<<HTML
+$js = <<<JS
 $('#button').on('click', function (e) {
 
 })
-HTML;
+JS;
 echo Erbilen\JqueryToJS::convert($js);
 /*
 document.getElementById("button").addEventListener('click', (e) => {
@@ -171,12 +171,12 @@ document.getElementById("button").addEventListener('click', (e) => {
 or
 
 ```php
-$js = <<<HTML
+$js = <<<JS
 function callback(e){
 	console.log(e);
 }
 $('#button').on('click', callback);
-HTML;
+JS;
 echo Erbilen\JqueryToJS::convert($js);
 /*
 function callback(e){
@@ -200,7 +200,7 @@ document.getElementById("open-btn").dispatchEvent(event);
 convert `ajax()` method
 
 ```php
-$js = <<<HTML
+$js = <<<JS
 var data = {
 	name: "Tayfun",
 	surname: "Erbilen"
@@ -217,7 +217,7 @@ $.ajax({
 		$('#error').html(err);
 	}
 });
-HTML;
+JS;
 echo Erbilen\JqueryToJS::convert($js);
 /*
 let data = {
@@ -279,6 +279,8 @@ $(function () {
 
 });
 JS;
+
+echo \Erbilen\JqueryToJS::convert($js);
 
 /*
 
