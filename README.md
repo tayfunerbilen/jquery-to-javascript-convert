@@ -92,7 +92,7 @@ convert `remove()` method
 echo Erbilen\JqueryToJS::convert("$('#container').remove()");
 /*
 let container = document.getElementById("container");
-  container.parentNode.removeChild(container);
+container.parentNode.removeChild(container);
 */
 ```
 
@@ -122,4 +122,95 @@ convert `toggleClass()` method
 ```php
 echo Erbilen\JqueryToJS::convert("$('#container').toggleClass('active')");
 // document.getElementById("container").classList.toggle("active")
+```
+
+convert `on()` method
+
+```php
+$js = <<<HTML
+$('#button').on('click', function (e) {
+
+})
+HTML;
+echo Erbilen\JqueryToJS::convert($js);
+/*
+document.getElementById("button").addEventListener('click', (e) => {
+
+});
+*/
+```
+
+or
+
+```php
+$js = <<<HTML
+function callback(e){
+	console.log(e);
+}
+$('#button').on('click', callback);
+HTML;
+echo Erbilen\JqueryToJS::convert($js);
+/*
+function callback(e){
+	console.log(e);
+}
+document.getElementById("button").addEventListener('click', callback);
+*/
+```
+
+convert `trigger()` method
+
+```php
+echo Erbilen\JqueryToJS::convert("$('#open-btn').trigger('click')");
+/*
+var event = document.createEvent('HTMLEvents');
+event.initEvent('click', true, false);
+document.getElementById("open-btn").dispatchEvent(event);
+*/
+```
+
+convert `ajax()` method
+
+```php
+$js = <<<HTML
+var data = {
+	name: "Tayfun",
+	surname: "Erbilen"
+};
+
+$.ajax({
+	type: 'POST',
+	url: 'api/contact.php',
+	data: data,
+	success: function (responseVar) {
+		$('#response').html(responseVar);
+	},
+	error: function (err) {
+		$('#error').html(err);
+	}
+});
+HTML;
+echo Erbilen\JqueryToJS::convert($js);
+/*
+let data = {
+	name: "Tayfun",
+	surname: "Erbilen"
+};
+
+let request = new XMLHttpRequest();
+    request.open('POST', 'api/contact.php', true);
+
+    request.onload = () => {
+        if (this.status >= 200 && this.status < 400) {
+            let responseVar = this.response;
+            document.getElementById("response").innerHTML = responseVar;
+        }
+    }
+
+    request.onerror = (err) => {
+        document.getElementById("error").innerHTML = err;
+    }
+
+    request.send(data);
+*/
 ```
