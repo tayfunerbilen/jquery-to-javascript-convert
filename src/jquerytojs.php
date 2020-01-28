@@ -55,8 +55,21 @@ trait Events
 		$pattern = "@\.on\('([0-9a-zA-Z-_]+)',\s?function\s?\(([0-9a-zA-Z-_, ]+|)\)\s?{(.*?)}\);?@s";
 		self::$js = preg_replace_callback($pattern, function ($js) {
 			if (isset($js[1]) && !empty($js[1]))
-				return '.addEventListener(\'' . $js[1] . '\', (' . $js[2] . ') => {' . $js[3] . '});';
+				return '.addEventListener(\'' . $js[1] . '\', (' . (!empty($js[2]) ? $js[2] : 'e') . ') => {' . self::this($js[3]) . '});';
 		}, self::$js);
+	}
+
+	/**
+	 * .on() metodundaki $(this) değerini değiştirir
+	 * @param $js
+	 * @return string|string[]|null
+	 */
+	public static function this($js)
+	{
+		$pattern = "@\\$\(\s?this\s?\)@";
+		return preg_replace_callback($pattern, function ($js) {
+			return 'e.target';
+		}, $js);
 	}
 
 	/**
@@ -134,7 +147,7 @@ trait Requests
 			return $js;
 		}, self::$js);
 	}
-	
+
 	/**
 	 * $.getJSON() metodunu dönüştürür
 	 */
@@ -144,7 +157,7 @@ trait Requests
 		self::$js = preg_replace_callback($pattern, function ($js) {
 
 			return 'let request = new XMLHttpRequest();
-request.open(\'' . ($js[5] ? 'POST' : 'GET') .'\', \'' . $js[2] . '\', true);
+request.open(\'' . ($js[5] ? 'POST' : 'GET') . '\', \'' . $js[2] . '\', true);
 
 request.onload = function() {
   if (this.status >= 200 && this.status < 400) {
