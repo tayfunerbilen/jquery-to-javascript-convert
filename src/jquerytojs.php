@@ -146,7 +146,7 @@ JS;
 
 			if ($successVariable)
 				$js .= <<<JS
-\nrequest.onload = function() {
+\nrequest.onload = () => {
 	if (this.status >= 200 && this.status < 400) {
 		let {$successVariable} = this.response;
 		{$successCallback}
@@ -156,7 +156,7 @@ JS;
 
 			if ($errorVariable)
 				$js .= <<<JS
-\nrequest.onerror = function({$errorVariable}) {
+\nrequest.onerror = ({$errorVariable}) => {
 	{$errorCallback}
 };
 JS;
@@ -199,7 +199,7 @@ trait DOM
 	 */
 	public static function varToLet()
 	{
-		self::$js = str_replace('var', 'let', self::$js);
+		self::$js = preg_replace('@var\s+([0-9a-zA-Z-_]?)@', 'let $1', self::$js);
 	}
 
 	/**
@@ -354,6 +354,7 @@ class JqueryToJS
 	use Selectors, Events, Requests, DOM;
 
 	public static $js;
+	public static $replaceVarToLet = true;
 	public static $removeComments = true;
 
 	public static function check($param)
@@ -390,7 +391,8 @@ class JqueryToJS
 		self::documentReady();
 		if (self::$removeComments)
 			self::removeComments();
-		self::varToLet();
+		if (self::$replaceVarToLet)
+			self::varToLet();
 		self::idSelectors();
 		self::classSelectors();
 		self::html();
