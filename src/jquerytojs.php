@@ -322,6 +322,30 @@ trait DOM
 				return '.value';
 		}, self::$js);
 	}
+
+	/**
+	 * .next() metodunu dönüştürür
+	 */
+	public static function next()
+	{
+		$pattern = "@\.next\(\)@";
+		self::$js = preg_replace_callback($pattern, function ($js) {
+			return '.nextElementSibling';
+		}, self::$js);
+		// @TODO çoklu seçim için güncelleme yapılacak
+	}
+
+	/**
+	 * .prev() metodunu dönüştürür
+	 */
+	public static function prev()
+	{
+		$pattern = "@\.prev\(\)@";
+		self::$js = preg_replace_callback($pattern, function ($js) {
+			return '.previousElementSibling';
+		}, self::$js);
+		// @TODO çoklu seçim için güncelleme yapılacak
+	}
 }
 
 class JqueryToJS
@@ -379,6 +403,8 @@ class JqueryToJS
 		self::show();
 		self::remove();
 		self::val();
+		self::next();
+		self::prev();
 		self::on();
 		self::trigger();
 		self::ajax();
