@@ -170,6 +170,29 @@ echo Erbilen\JqueryToJS::convert("$('#test').prev()");
 // document.getElementById("test").previousElementSibling;
 ```
 
+convert `clone()` method
+```php
+echo Erbilen\JqueryToJS::convert("var test = $('#test').clone()");
+// let test = document.getElementById("test").cloneNode(true)
+```
+
+convert `$.each()` method
+```php
+$js = <<<JS
+var list = $('#list li');
+$.each(list, function(key, val){
+	console.log($(val).html());
+});
+JS;
+echo Erbilen\JqueryToJS::convert($js);
+/*
+var list = document.querySelectorAll("#list li");
+list.forEach(function(val, key){
+	console.log(val.innerHTML);
+});
+*/
+```
+
 convert `on()` method
 
 ```php
