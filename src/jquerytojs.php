@@ -101,14 +101,19 @@ trait Requests
 			if (self::check($js[0])) {
 
 				// type değerini al
-				$pattern = "@type\s?:\s?'(GET|POST)'@i";
+				$pattern = "@type\s?:\s?('|\")(GET|POST)('|\")@i";
 				preg_match($pattern, $js[0], $type);
-				$type = $type[1] ?? null;
+				$type = $type[2] ?? null;
+
+				// dataType değerini al
+				$pattern = "@dataType\s?:\s?('|\")(.*?)('|\")@i";
+				preg_match($pattern, $js[0], $dataType);
+				$dataType = $dataType[2] ?? null;
 
 				// url değerini al
-				$pattern = "@url\s?:\s?'([a-zA-Z-_/.]+)'@i";
+				$pattern = "@url\s?:\s?('|\")([a-zA-Z-_/.]+)('|\")@i";
 				preg_match($pattern, $js[0], $url);
-				$url = $url[1] ?? null;
+				$url = $url[2] ?? null;
 
 				// data değerini al
 				$pattern = "@data\s?:\s?('|)([a-zA-Z-_/.& =]+)('|)@i";
@@ -118,7 +123,7 @@ trait Requests
 				// success callback fonksiyonunu al
 				$pattern = "@success\s?:\s?function\s?\((.*?)\)\s?\{(.*?)\}@s";
 				preg_match($pattern, $js[0], $successFunction);
-				$successVariable = $successFunction[1] ?? 'response';
+				$successVariable = $successFunction[1] ?? null;
 				$successCallback = $successFunction[2] ?? null;
 
 				// error callback fonksiyonunu al
@@ -130,19 +135,28 @@ trait Requests
 			}
 
 			$js = 'let request = new XMLHttpRequest();
-    request.open(\'' . $type . '\', \'' . $url . '\', true);
-
+    request.open(\'' . $type . '\', \'' . $url . '\', true);';
+			if ($dataType) {
+				$js .= "\n    request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');";
+			}
+			if ($successVariable) {
+				$js .= '
     request.onload = () => {
         if (this.status >= 200 && this.status < 400) {
             let ' . $successVariable . ' = this.response;
             ' . trim($successCallback) . '
         }
-    }
+    }';
+			}
 
+			if ($errorVariable) {
+				$js .= '
     request.onerror = (' . $errorVariable . ') => {
         ' . trim($errorCallback) . '
-    }
+    }';
+			}
 
+			$js .= '
     request.send(' . $data . ');';
 			return $js;
 		}, self::$js);
