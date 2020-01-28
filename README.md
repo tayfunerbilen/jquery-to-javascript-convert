@@ -3,6 +3,8 @@ This PHP class helps to convert your (really) simple jquery codes to vanilla jav
 
 There is a lot of issues, it's not completed yet, yet you can convert your simple jquery codes to vanilla js instead of use jquery library using this php class.
 
+> Inspired from [youmightnotneedjquery.com](http://youmightnotneedjquery.com)
+
 Install with composer
 
 ```
