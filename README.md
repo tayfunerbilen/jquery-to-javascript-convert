@@ -5,6 +5,8 @@ There is a lot of issues, it's not completed yet, yet you can convert your simpl
 
 > Inspired from [youmightnotneedjquery.com](http://youmightnotneedjquery.com)
 
+# Installation
+
 Install with composer
 
 ```
