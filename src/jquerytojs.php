@@ -45,17 +45,17 @@ trait Events
 	{
 
 		// fonksiyon çağırımı için
-		$pattern = "@\.on\('([0-9a-zA-Z-_]+)',\s?([0-9a-zA-Z-_]+)\)@s";
+		$pattern = "@\.on\('([0-9a-zA-Z-_]+)',\s?([0-9a-zA-Z-_]+)\);?@s";
 		self::$js = preg_replace_callback($pattern, function ($js) {
 			if (isset($js[1]) && !empty($js[1]))
-				return '.addEventListener(\'' . $js[1] . '\', ' . $js[2] . ')';
+				return '.addEventListener(\'' . $js[1] . '\', ' . $js[2] . ');';
 		}, self::$js);
 
 		// inline callback fonksiyonu için
-		$pattern = "@\.on\('([0-9a-zA-Z-_]+)',\s?function\s?\(([0-9a-zA-Z-_, ]+|)\)\s?{(.*?)}\)@s";
+		$pattern = "@\.on\('([0-9a-zA-Z-_]+)',\s?function\s?\(([0-9a-zA-Z-_, ]+|)\)\s?{(.*?)}\);?@s";
 		self::$js = preg_replace_callback($pattern, function ($js) {
 			if (isset($js[1]) && !empty($js[1]))
-				return '.addEventListener(\'' . $js[1] . '\', (' . $js[2] . ') => {' . $js[3] . '})';
+				return '.addEventListener(\'' . $js[1] . '\', (' . $js[2] . ') => {' . $js[3] . '});';
 		}, self::$js);
 	}
 
@@ -64,7 +64,7 @@ trait Events
 	 */
 	public static function trigger()
 	{
-		$pattern = '@document.(getElementByClassName|getElementById|querySelector|querySelectorAll)\("([0-9a-zA-Z-_]+)"\)\.trigger\((\'|")([a-zA-Z]+)(\'|")\);@';
+		$pattern = '@document.(getElementByClassName|getElementById|querySelector|querySelectorAll)\("([0-9a-zA-Z-_]+)"\)\.trigger\((\'|")([a-zA-Z]+)(\'|")\);?@';
 		self::$js = preg_replace_callback($pattern, function ($js) {
 			return 'var event = document.createEvent(\'HTMLEvents\');
 	event.initEvent(\'' . $js[4] . '\', true, false);
@@ -83,7 +83,7 @@ trait Requests
 	 */
 	public static function ajax()
 	{
-		$pattern = "@\\$\.ajax\(\{(.*?)\}\)@s";
+		$pattern = "@\\$\.ajax\(\{(.*?)\}\);?@s";
 		self::$js = preg_replace_callback($pattern, function ($js) {
 			if (self::check($js[0])) {
 
@@ -117,20 +117,20 @@ trait Requests
 			}
 
 			$js = 'let request = new XMLHttpRequest();
-        request.open(\'' . $type . '\', \'' . $url . '\', true);
+    request.open(\'' . $type . '\', \'' . $url . '\', true);
 
-        request.onload = () => {
-            if (this.status >= 200 && this.status < 400) {
-                let ' . $successVariable . ' = this.response;
-                ' . trim($successCallback) . '
-            }
-        };
+    request.onload = () => {
+        if (this.status >= 200 && this.status < 400) {
+            let ' . $successVariable . ' = this.response;
+            ' . trim($successCallback) . '
+        }
+    }
 
-        request.onerror = (' . $errorVariable . ') => {
-            ' . trim($errorCallback) . '
-        };
+    request.onerror = (' . $errorVariable . ') => {
+        ' . trim($errorCallback) . '
+    }
 
-        request.send(' . $data . ')';
+    request.send(' . $data . ');';
 			return $js;
 		}, self::$js);
 	}
@@ -246,11 +246,11 @@ trait DOM
 	 */
 	public static function remove()
 	{
-		$pattern = "@document\.(getElementByClassName|getElementById|querySelector|querySelectorAll)\(('|\")([0-9a-zA-Z-_.\s]+)('|\")\)\.remove\(\)@";
+		$pattern = "@document\.(getElementByClassName|getElementById|querySelector|querySelectorAll)\(('|\")([0-9a-zA-Z-_.\s]+)('|\")\)\.remove\(\);?@";
 		self::$js = preg_replace_callback($pattern, function ($js) {
 			$varName = str_replace(['.', ' ', '>'], null, $js[3]);
-			$el = 'let ' . $varName . ' = document.' . $js[1] . '(' . $js[2] . $js[3] . $js[4] . ')';
-			return $el . PHP_EOL . "\t" . $varName . ".parentNode.removeChild(" . $varName . ")";
+			$el = 'let ' . $varName . ' = document.' . $js[1] . '(' . $js[2] . $js[3] . $js[4] . ');';
+			return $el . PHP_EOL . "\t" . $varName . ".parentNode.removeChild(" . $varName . ");";
 		}, self::$js);
 	}
 
