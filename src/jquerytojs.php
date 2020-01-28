@@ -134,6 +134,28 @@ trait Requests
 			return $js;
 		}, self::$js);
 	}
+	
+	/**
+	 * $.getJSON() metodunu dönüştürür
+	 */
+	public static function getJSON()
+	{
+		$pattern = "@\\$\.getJSON\(\s?('|\")(.*?)('|\")\s?,\s?({|)(.*?|[0-9a-zA-Z]+)(}|)(,|)\s?function\(\s?(.*?)\s?\)\s?{(.*?)}\);?@s";
+		self::$js = preg_replace_callback($pattern, function ($js) {
+
+			return 'let request = new XMLHttpRequest();
+request.open(\'' . ($js[5] ? 'POST' : 'GET') .'\', \'' . $js[2] . '\', true);
+
+request.onload = function() {
+  if (this.status >= 200 && this.status < 400) {
+    let ' . $js[8] . ' = JSON.parse(this.response);
+    ' . trim($js[9]) . '
+  }
+};
+
+request.send(' . ($js[5] ? 'JSON.stringify(' : null) . $js[4] . $js[5] . $js[6] . ($js[5] ? ')' : null) . ');';
+		}, self::$js);
+	}
 
 }
 
@@ -327,6 +349,7 @@ class JqueryToJS
 		self::on();
 		self::trigger();
 		self::ajax();
+		self::getJSON();
 		return self::$js;
 	}
 
