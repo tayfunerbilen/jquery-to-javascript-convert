@@ -304,7 +304,7 @@ trait DOM
 		$pattern = "@document\.(getElementByClassName|getElementById|querySelector|querySelectorAll)\(('|\")([0-9a-zA-Z-_.\s]+)('|\")\)\.remove\(\);?@";
 		self::$js = preg_replace_callback($pattern, function ($js) {
 			$varName = str_replace(['.', ' ', '>'], null, $js[3]);
-			$el = 'let ' . $varName . ' = document.' . $js[1] . '(' . $js[2] . $js[3] . $js[4] . ');';
+			$el = (self::$replaceVarToLet ? 'let' : 'var') . ' ' . $varName . ' = document.' . $js[1] . '(' . $js[2] . $js[3] . $js[4] . ');';
 			return $el . PHP_EOL . "\t" . $varName . ".parentNode.removeChild(" . $varName . ");";
 		}, self::$js);
 	}
@@ -345,6 +345,15 @@ trait DOM
 			return '.previousElementSibling';
 		}, self::$js);
 		// @TODO çoklu seçim için güncelleme yapılacak
+	}
+
+	/**
+	 * .clone() metodunu dönüştürür
+	 */
+	public static function clone()
+	{
+		$pattern = "@.clone\(\)@";
+		self::$js = preg_replace($pattern, '.cloneNode(true)', self::$js);
 	}
 }
 
@@ -407,6 +416,7 @@ class JqueryToJS
 		self::val();
 		self::next();
 		self::prev();
+		self::clone();
 		self::on();
 		self::trigger();
 		self::ajax();
