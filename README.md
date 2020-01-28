@@ -156,6 +156,20 @@ echo Erbilen\JqueryToJS::convert("$('#container').toggleClass('active')");
 // document.getElementById("container").classList.toggle("active")
 ```
 
+convert `next()` method
+
+```php
+echo Erbilen\JqueryToJS::convert("$('#test').next()");
+// document.getElementById("test").nextElementSibling;
+```
+
+convert `prev()` method
+
+```php
+echo Erbilen\JqueryToJS::convert("$('#test').prev()");
+// document.getElementById("test").previousElementSibling;
+```
+
 convert `on()` method
 
 ```php
