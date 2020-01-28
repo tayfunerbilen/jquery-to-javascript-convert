@@ -55,7 +55,7 @@ trait Events
 		$pattern = "@\.on\('([0-9a-zA-Z-_]+)',\s?function\s?\(([0-9a-zA-Z-_, ]+|)\)\s?{(.*?)}\);?@s";
 		self::$js = preg_replace_callback($pattern, function ($js) {
 			if (isset($js[1]) && !empty($js[1]))
-				return '.addEventListener(\'' . $js[1] . '\', (' . (!empty($js[2]) ? $js[2] : 'e') . ') => {' . self::this($js[3]) . '});';
+				return '.addEventListener(\'' . $js[1] . '\', (' . (!empty($js[2]) ? $js[2] : 'e') . ') => {' . self::this($js[3], $js[2]) . '});';
 		}, self::$js);
 	}
 
@@ -64,11 +64,11 @@ trait Events
 	 * @param $js
 	 * @return string|string[]|null
 	 */
-	public static function this($js)
+	public static function this($js, $event = null)
 	{
 		$pattern = "@\\$\(\s?this\s?\)@";
-		return preg_replace_callback($pattern, function ($js) {
-			return 'e.target';
+		return preg_replace_callback($pattern, function ($js) use ($event) {
+			return (empty($event) ? 'e' : $event) . '.target';
 		}, $js);
 	}
 
