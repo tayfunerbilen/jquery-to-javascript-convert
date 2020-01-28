@@ -245,6 +245,64 @@ let request = new XMLHttpRequest();
 */
 ```
 
+convert `$.getJSON()` method
+
+```php
+$js = <<<JS
+$.getJSON( "api/get-articles", function(json) {
+	console.log(json);
+});
+JS;
+echo Erbilen\JqueryToJS::convert($js)
+
+/*
+let request = new XMLHttpRequest();
+request.open('GET', 'api/get-articles', true);
+
+request.onload = function() {
+  if (this.status >= 200 && this.status < 400) {
+    let json = JSON.parse(this.response);
+    console.log(json);
+  }
+};
+
+request.send();
+*/
+```
+
+also you can send data as well
+
+```php
+$js = <<<JS
+var data = {
+    query: "harry",
+    limit: 5
+};
+$.getJSON( "api/get-articles", data, function(json) {
+	console.log(json);
+});
+JS;
+echo Erbilen\JqueryToJS::convert($js)
+
+/*
+let data = {
+    query: "harry",
+    limit: 5
+};
+let request = new XMLHttpRequest();
+request.open('POST', 'api/get-articles', true);
+
+request.onload = function() {
+  if (this.status >= 200 && this.status < 400) {
+    let json = JSON.parse(this.response);
+    console.log(json);
+  }
+};
+
+request.send(JSON.stringify(data));
+*/
+```
+
 # converting little bit complex code
 ```php
 $js = <<<JS
