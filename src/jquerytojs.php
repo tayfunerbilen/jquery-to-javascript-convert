@@ -146,7 +146,7 @@ JS;
 
 			if ($successVariable)
 				$js .= <<<JS
-\nrequest.onload = () => {
+\nrequest.onload = function() {
 	if (this.status >= 200 && this.status < 400) {
 		let {$successVariable} = this.response;
 		{$successCallback}
@@ -156,7 +156,7 @@ JS;
 
 			if ($errorVariable)
 				$js .= <<<JS
-\nrequest.onerror = ({$errorVariable}) => {
+\nrequest.onerror = function({$errorVariable}) {
 	{$errorCallback}
 };
 JS;
