@@ -203,7 +203,7 @@ trait DOM
 	 */
 	public static function varToLet()
 	{
-		self::$js = preg_replace('@var\s+([0-9a-zA-Z-_]?)@', 'let $1', self::$js);
+		self::$js = preg_replace('@\bvar\s+([0-9a-zA-Z-_]?)@', 'let $1', self::$js);
 	}
 
 	/**
