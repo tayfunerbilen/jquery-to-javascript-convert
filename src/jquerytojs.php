@@ -13,7 +13,11 @@ trait Selectors
 		$pattern = "@\\$\(\s?('|\")\s?\#([0-9a-zA-Z-_ ]+)\s?('|\")\s?\)@";
 		self::$js = preg_replace_callback($pattern, function ($js) {
 			if (isset($js[2]) && !empty($js[2]))
-				return 'document.getElementById("' . trim($js[2]) . '")';
+				// eğer boşluk varsa multiple etiket seçeceğini kabul et
+				if (strstr(trim($js[2]), ' '))
+					return 'document.querySelectorAll("#' . trim($js[2]) . '")';
+				else
+					return 'document.getElementById("' . trim($js[2]) . '")';
 		}, self::$js);
 	}
 
@@ -203,6 +207,17 @@ trait DOM
 	}
 
 	/**
+	 * $(var) değerini dönüştürür
+	 */
+	public static function replaceVars()
+	{
+		$pattern = "@\\$\((\w+)\)@si";
+		self::$js = preg_replace_callback($pattern, function ($js) {
+			return $js[1];
+		}, self::$js);
+	}
+
+	/**
 	 * .html(x) metodunu dönüştürür
 	 */
 	public static function html()
@@ -355,6 +370,21 @@ trait DOM
 		$pattern = "@.clone\(\)@";
 		self::$js = preg_replace($pattern, '.cloneNode(true)', self::$js);
 	}
+
+	/**
+	 * $.each() metodunu dönüştürür
+	 */
+	public static function each()
+	{
+
+		$pattern = "@\\$\.each\(\s?(\w+)\s?\,\s?function\((.*?)\){(.*?)}\s?\)@s";
+		self::$js = preg_replace_callback($pattern, function ($js) {
+			$params = array_reverse(explode(',', str_replace(' ', null, trim($js[2]))));
+			return $js[1] . '.forEach(function(' . implode(', ', $params) . '){
+	' . trim($js[3]) . '
+})';
+		}, self::$js);
+	}
 }
 
 class JqueryToJS
@@ -402,6 +432,7 @@ class JqueryToJS
 			self::removeComments();
 		if (self::$replaceVarToLet)
 			self::varToLet();
+		self::replaceVars();
 		self::idSelectors();
 		self::classSelectors();
 		self::html();
@@ -417,6 +448,7 @@ class JqueryToJS
 		self::next();
 		self::prev();
 		self::clone();
+		self::each();
 		self::on();
 		self::trigger();
 		self::ajax();
