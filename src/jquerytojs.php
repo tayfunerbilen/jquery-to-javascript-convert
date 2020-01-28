@@ -124,40 +124,46 @@ trait Requests
 				$pattern = "@success\s?:\s?function\s?\((.*?)\)\s?\{(.*?)\}@s";
 				preg_match($pattern, $js[0], $successFunction);
 				$successVariable = $successFunction[1] ?? null;
-				$successCallback = $successFunction[2] ?? null;
+				$successCallback = trim($successFunction[2]) ?? null;
 
 				// error callback fonksiyonunu al
 				$pattern = "@error\s?:\s?function\s?\((.*?)\)\s?\{(.*?)\}@s";
 				preg_match($pattern, $js[0], $errorFunction);
 				$errorVariable = $errorFunction[1] ?? null;
-				$errorCallback = $errorFunction[2] ?? null;
+				$errorCallback = trim($errorFunction[2]) ?? null;
 
 			}
 
-			$js = 'let request = new XMLHttpRequest();
-    request.open(\'' . $type . '\', \'' . $url . '\', true);';
-			if ($dataType) {
-				$js .= "\n    request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');";
-			}
-			if ($successVariable) {
-				$js .= '
-    request.onload = () => {
-        if (this.status >= 200 && this.status < 400) {
-            let ' . $successVariable . ' = this.response;
-            ' . trim($successCallback) . '
-        }
-    }';
-			}
+			$js = <<<JS
+let request = new XMLHttpRequest();
+request.open("{$type}", "{$url}", true);
+JS;
 
-			if ($errorVariable) {
-				$js .= '
-    request.onerror = (' . $errorVariable . ') => {
-        ' . trim($errorCallback) . '
-    }';
-			}
+			if ($dataType)
+				$js .= <<<JS
+\nrequest.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+JS;
 
-			$js .= '
-    request.send(' . $data . ');';
+			if ($successVariable)
+				$js .= <<<JS
+\nrequest.onload = () => {
+	if (this.status >= 200 && this.status < 400) {
+		let {$successVariable} = this.response;
+		{$successCallback}
+	}
+}
+JS;
+
+			if ($errorVariable)
+				$js .= <<<JS
+\nrequest.onerror = ({$errorVariable}) => {
+	{$errorCallback}
+};
+JS;
+
+			$js .= <<<JS
+\nrequest.send({$data});
+JS;
 			return $js;
 		}, self::$js);
 	}
