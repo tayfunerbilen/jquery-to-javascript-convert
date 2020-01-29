@@ -1,25 +1,38 @@
 {
-    "name": "tayfunerbilen/jquery-to-javascript-convert",
-    "type": "class",
-    "description": "It helps to convert your simple jquery codes to vanilla javascript codes",
-    "keywords": ["php","jquery","javascript","converter"],
-    "homepage": "https://github.com/tayfunerbilen/jquery-to-javascript-convert",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Tayfun Erbilen",
-            "email": "tayfunerbilen@gmail.com",
-            "homepage": "http://www.erbilen.net",
-            "role": "Developer"
-        }
-    ],
-    "minimum-stability": "dev",
-    "require": {
-        "php": ">=7.0.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "Erbilen\\": "src"
-        }
+  "name": "tayfunerbilen/jquery-to-javascript-convert",
+  "type": "class",
+  "description": "It helps to convert your simple jquery codes to vanilla javascript codes",
+  "keywords": [
+    "php",
+    "jquery",
+    "javascript",
+    "converter"
+  ],
+  "homepage": "https://github.com/tayfunerbilen/jquery-to-javascript-convert",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Tayfun Erbilen",
+      "email": "tayfunerbilen@gmail.com",
+      "homepage": "http://www.erbilen.net",
+      "role": "Developer"
     }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=7.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Erbilen\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Erbilen\\JqueryToJS\\Test\\": "tests"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8.5.2"
+  }
 }
