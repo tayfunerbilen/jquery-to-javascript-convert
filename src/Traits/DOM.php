@@ -184,7 +184,7 @@ trait DOM
 	public static function each()
 	{
 
-		$pattern = "@\\$\.each\(\s?(\w+)\s?\,\s?function\((.*?)\){(.*?)}\s?\)@s";
+		$pattern = "@\\$\.each\(\s?(\w+)\s?\,\s?function\s?\((.*?)\)\s?{(.*?)}\s?\)@s";
 		self::$js = preg_replace_callback($pattern, function ($js) {
 			$params = array_reverse(explode(',', str_replace(' ', null, trim($js[2]))));
 			return $js[1] . '.forEach(function(' . implode(', ', $params) . '){
