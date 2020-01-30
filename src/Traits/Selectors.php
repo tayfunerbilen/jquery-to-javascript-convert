@@ -1,11 +1,4 @@
 <?php
-/*
- | nebulaBB Forum Software
- |
- | Author: Remzi Kocak <kocak0068@gmail.com>
- | Created at: 28.01.20 18:36
- | Version: 1.0.0
- */
 
 namespace Erbilen\Traits;
 
