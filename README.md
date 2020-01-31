@@ -5,7 +5,7 @@ There is a lot of issues, it's not completed yet, yet you can convert your simpl
 
 > Inspired from [youmightnotneedjquery.com](http://youmightnotneedjquery.com)
 
-For javascript implementation: https://github.com/aykutkardas/jquery-to-javascript
+for javascript adaptation: https://github.com/aykutkardas/jquery-to-javascript
 
 # Installation
 
